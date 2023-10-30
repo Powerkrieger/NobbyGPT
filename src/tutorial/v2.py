@@ -6,14 +6,18 @@ from torch.nn import functional as F
 # This "documentation" works best in combination with 'nanoGPT_Start.ipynb', where those comments originate from
 
 # hyperparameters
-batch_size = 32 # Menge der parallel bearbeiteten Blöcke
-block_size = 8 # Maximale Kontext-Länge
+batch_size = 64 # Menge der parallel bearbeiteten Blöcke
+block_size = 256 # Maximale Kontext-Länge
 max_iters = 5000 # Trainingsiterationen
-eval_interval = 300 # Evaluationsintervall für Loss-Durchschnitt
-learning_rate = 1e-3
+eval_interval = 500 # Evaluationsintervall für Loss-Durchschnitt
+learning_rate = 3e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu' # GGF auf GPU laufen, erfordert dann dieses ganze .to(device)
 eval_iters = 200 # Menge der Samples für Loss-Durchschnitt, damit die Approximation genauer + stabiler ist
 n_embd = 32 # "Number of embedding dimensions"
+n_embd = 384 # Embedding Dimensions für Tabellen / Tensoren
+n_head = 6 # Wie viele Heads für Attention (384/6 = 64)
+n_layer = 6 # Layers für Attention -> Gleicher Grund wie Oben
+dropout = 0.2 # Overfitting-Prevention, indem random Kommunikationswege unterbunden werden
 # ------------
 
 # Seed für Random-Gedöns -> Wichtig für Reproduzierbarkeit
@@ -82,6 +86,8 @@ class Head(nn.Module):
         self.value = nn.Linear(n_embd, head_size, bias=False) # Rohdaten-Dimensionsredukltion auf Head-Size
         self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size))) # Die Dreiecksmatrix mit Einsen
 
+        self.dropout = nn.Dropout(dropout)
+
     def forward(self, x):
         # input of size (batch, time-step, channels)
         # output of size (batch, time-step, head size)
@@ -92,11 +98,66 @@ class Head(nn.Module):
         wei = q @ k.transpose(-2,-1) * k.shape[-1]**-0.5 # (B, T, hs) @ (B, hs, T) -> (B, T, T)
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf')) # (B, T, T), damit Zukunft nicht bedacht wird
         wei = F.softmax(wei, dim=-1) # (B, T, T), Normalisieren
+        wei = self.dropout(wei)
 
         # Input mit Affinität verrechnen
         v = self.value(x) # (B,T,hs)
         out = wei @ v # (B, T, T) @ (B, T, hs) -> (B, T, hs)
         return out
+
+
+class MultiHeadAttention(nn.Module):
+    # Wenn man mehrere Heads benutzt, kann man dadurch parallel bessere Ergebnisse erziehlen
+    # Dafür "einfach" parallel ausführen und am ende konkatenieren
+
+    def __init__(self, num_heads, head_size):
+        super().__init__()
+        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
+        self.proj = nn.Linear(n_embd, n_embd) # Für residual connections
+        self.dropout = nn.Dropout(dropout)
+
+
+    def forward(self, x):
+        out = torch.cat([h(x) for h in self.heads], dim=-1)
+        out = self.dropout(self.proj(out))
+        return out
+
+
+# FeedForward Komponente, um die Auswahl des richtigen Tokens zu verbessern, indem auf den self-attention Daten
+# nochmal per Token gerechnet wird
+class FeedFoward(nn.Module):
+
+    def __init__(self, n_embd):
+        super().__init__()
+        self.net = nn.Sequential(
+            # Diese Struktur hat mit residual connections und guten Ansatzwerten aus dem Attention-Paper zu tun
+            nn.Linear(n_embd, 4 * n_embd),
+            nn.ReLU(),
+            nn.Linear(4 * n_embd, n_embd),
+            nn.Dropout(dropout),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class Block(nn.Module):
+    # Transformer-Block -> Wendet jetzt genau dieses Prinzip an: Erst self attention (communication), dann computation
+
+    def __init__(self, n_embd, n_head):
+        # n_embd: embedding dimension, n_head: the number of heads we'd like
+        super().__init__()
+        head_size = n_embd // n_head
+        # Hier sind jetzt die Mulit-Heads und das FFWD-NN
+        self.sa = MultiHeadAttention(n_head, head_size)
+        self.ffwd = FeedFoward(n_embd)
+        self.ln1 = nn.LayerNorm(n_embd) # Layer Normalization als verbesserung von Batch-Normalization
+        self.ln2 = nn.LayerNorm(n_embd)
+
+    def forward(self, x):
+        x = x + self.sa(self.ln1(x)) # x + ... ist smart, weil damit diese residual connections genutzt werden
+        x = x + self.ffwd(self.ln2(x)) # Neu: Pre-Normalization, anstatt wie im Paper Post-Normalization
+        return x
 
 
 # Einfachstes Beispiel -> BigramLanguageModel
@@ -113,8 +174,9 @@ class BigramLanguageModel(nn.Module):
         # Linear Layer, der daraus dann die Logits berechnet (Head für Language Model)
         self.lm_head = nn.Linear(n_embd, vocab_size)
 
-        # Head für self-attention
-        self.sa_head = Head(n_embd)
+        # Transformer-Blöcke definieren
+        self.blocks = nn.Sequential(*[Block(n_embd, n_head=n_head) for _ in range(n_layer)])
+        self.ln_f = nn.LayerNorm(n_embd)  # final layer norm
 
     def forward(self, idx, targets=None):
 
@@ -130,7 +192,7 @@ class BigramLanguageModel(nn.Module):
         token_emb = self.token_embedding_table(idx) # Identität / Affinität der Tokens
         pos_emb = self.position_embedding_table(torch.arange(T, device=device)) # Position der Tokens im Block
         x = token_emb + pos_emb # Fusion aus Position und Identität
-        x = self.sa_head(x) # Anwenden der Self-Attention auf diese Daten
+        x = self.blocks(x) # FFWD und Head-Computation in Blocks ausgelagert
         logits = self.lm_head(x) # Das hier ist jetzt B, T, C wie oben erklärt, nach Durchlauf des Linear Layers
 
         if targets is None:

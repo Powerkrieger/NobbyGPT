@@ -13,7 +13,6 @@ eval_interval = 500 # Evaluationsintervall für Loss-Durchschnitt
 learning_rate = 3e-4
 device = 'cuda' if torch.cuda.is_available() else 'cpu' # GGF auf GPU laufen, erfordert dann dieses ganze .to(device)
 eval_iters = 200 # Menge der Samples für Loss-Durchschnitt, damit die Approximation genauer + stabiler ist
-n_embd = 32 # "Number of embedding dimensions"
 n_embd = 384 # Embedding Dimensions für Tabellen / Tensoren
 n_head = 6 # Wie viele Heads für Attention (384/6 = 64)
 n_layer = 6 # Layers für Attention -> Gleicher Grund wie Oben

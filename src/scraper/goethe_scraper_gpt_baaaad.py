@@ -22,6 +22,7 @@ for link in links:
     if href and href.startswith('/ebooks/') and href[8:].isdigit():
         goethe_works_urls.append('https://www.gutenberg.org' + href)
 
+
 # Function to download and save a book
 def download_book(url):
     response = requests.get(url)
@@ -33,6 +34,7 @@ def download_book(url):
     with open(f'{title}.txt', 'w', encoding='utf-8') as file:
         file.write(content)
     print(f'Saved: {title}.txt')
+
 
 # Download and save each of Goethe's works
 for work_url in goethe_works_urls:

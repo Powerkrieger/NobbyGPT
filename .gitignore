@@ -1,0 +1,12 @@
+
+src/nanoGPT/data/goethe/train.bin
+src/nanoGPT/data/goethe/val.bin
+src/nanoGPT/data/shakespeare/input.txt
+src/nanoGPT/data/shakespeare/train.bin
+src/nanoGPT/data/shakespeare/val.bin
+src/nanoGPT/data/shakespeare_char/input.txt
+src/nanoGPT/out-goethe/ckpt.pt
+*.pt
+src/nanoGPT/sample.py
+src/nanoGPT/sample.py
+src/nanoGPT/__pycache__/model.cpython-311.pyc

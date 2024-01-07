@@ -10,3 +10,4 @@ src/nanoGPT/out-goethe/ckpt.pt
 src/nanoGPT/sample.py
 src/nanoGPT/sample.py
 src/nanoGPT/__pycache__/model.cpython-311.pyc
+.idea

@@ -11,6 +11,10 @@ import transformers
 from datetime import datetime
 
 
+base_model_name = "Llama-2-7b-hf"
+base_model_id = f"meta-llama/{base_model_name}"
+project_name = "whole-text-denglish-finetune"
+
 def formatting_func(example):
     text = f"{example['input']}"
     return text
@@ -173,7 +177,6 @@ def setup_finetuning(model, tokenizer, project, base_model_name):
 
 if __name__ == '__main__':
     # set up wandb
-    project_name = "whole-text-denglish-finetune"
     wandb_setup(project_name)
 
     # Accelerator
@@ -186,8 +189,7 @@ if __name__ == '__main__':
                                 split='train')
 
     # prepare model and tokenizer
-    base_model_name = "Llama-2-7b-hf"
-    base_model_id = f"meta-llama/{base_model_name}"
+
 
     model = load_model(base_model_id)
     tokenizer = load_tokenizer(base_model_id)

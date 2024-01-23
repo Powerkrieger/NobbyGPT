@@ -14,6 +14,10 @@ from datetime import datetime
 base_model_name = "Llama-2-7b-hf"
 base_model_id = f"meta-llama/{base_model_name}"
 project_name = "whole-text-denglish-finetune"
+train_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL4_J.json'
+eval_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL3_J.json'
+
+
 
 def formatting_func(example):
     text = f"{example['input']}"
@@ -183,9 +187,9 @@ if __name__ == '__main__':
     accelerator = setup_accelerator()
 
     # load dataset
-    train_dataset = load_dataset('json', data_files='../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL4_J.json',
+    train_dataset = load_dataset('json', data_files=train_data_file,
                                  split='train')
-    eval_dataset = load_dataset('json', data_files='../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL3_J.json',
+    eval_dataset = load_dataset('json', data_files=eval_data_file,
                                 split='train')
 
     # prepare model and tokenizer

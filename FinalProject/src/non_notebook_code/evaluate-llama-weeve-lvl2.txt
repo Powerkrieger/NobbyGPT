@@ -1,0 +1,65 @@
+Enter the name of the file: Reading the textfile and previewing the first n characters :
+
+Lenth of file (words):  173
+Lenth of file (chars):  1006 
+
+Write a story about a sailor. 2. Make a list of the most important experiences in your life. 3. Make a list of the most important experiences in the life of somebody you know. 4. Make a list of the most important experiences in the life of somebody you kno
+Check with LanguageTool
+LanguageTool analysis:
+Number of spelling mistakes:  141
+Error rate:  0.815028901734104
+Check with PySpellChecker
+PySpellChecker analysis:
+Misspelled Words:  71
+Error Rate:  0.41040462427745666
+Check with Hunspell
+HunSpell analysis:
+Misspelled Words:  161
+Error Rate:  0.930635838150289
+Build vocabulary and print size
+Vocabulary size: 77
+
+The 10 most used words:
+Build histogram from vocabulary and preview the n most used words
+a: 15
+of: 13
+the: 12
+nonfiction: 7
+is: 6
+life: 5
+it: 5
+that: 4
+in: 4
+: 3
+German words and german vocabulary
+Number of german words, according to nltk: 32
+German word rate: 0.18497109826589594
+
+The 10 first german words:
+
+experiences
+combines
+skills
+wants
+presented
+reallife
+elements
+encompasses
+genres
+
+
+Build german vocabulary and print size
+German vocabulary size: 22
+
+The 10 most used german words:
+Build german histogram from vocabulary and preview the n most used words
+: 3
+experiences: 3
+make: 3
+creative: 3
+individuals: 2
+it: 2
+encompasses: 1
+narrative: 1
+memoir: 1
+combines: 1

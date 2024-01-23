@@ -1,69 +1,69 @@
 Enter the name of the file: Reading the textfile and previewing the first n characters :
 
-Lenth of file (words):  138
-Lenth of file (chars):  864 
+Lenth of file (words):  136
+Lenth of file (chars):  865 
 
-Write a story about a sailor. 100% Originality.
+Write a story about a sailor. 
 
-Hintergrund
+Kapitän Ivan Papanin, head of the Arctic and Antarctic Research und the Arctic and Antarctic Geographical expeditions, in the Arctic.[citation needed]
 
-Since the beginning of the 19th Jahrhundert, the Russian Navy has been engaged in a number of expeditions to the Norden und especially the Arctic Ocean. These journeys were not only the most wic
+The Arctic und Antarctic Forschung (Russian: Arctic und Antarctic Explor
 Check with LanguageTool
 LanguageTool analysis:
-Number of spelling mistakes:  85
-Error rate:  0.6159420289855072
+Number of spelling mistakes:  79
+Error rate:  0.5808823529411765
 Check with PySpellChecker
 PySpellChecker analysis:
-Misspelled Words:  74
-Error Rate:  0.5362318840579711
+Misspelled Words:  65
+Error Rate:  0.47794117647058826
 Check with Hunspell
 HunSpell analysis:
-Misspelled Words:  110
-Error Rate:  0.7971014492753623
+Misspelled Words:  104
+Error Rate:  0.7647058823529411
 Build vocabulary and print size
-Vocabulary size: 84
+Vocabulary size: 73
 
 The 10 most used words:
 Build histogram from vocabulary and preview the n most used words
-the: 16
-of: 8
-a: 7
-: 5
-to: 5
-und: 4
+the: 14
+: 9
+und: 6
+a: 6
+in: 5
+of: 5
 arctic: 4
-russian: 3
-journeys: 3
-in: 3
+antarctic: 4
+sculpture: 4
+soviet: 4
 German words and german vocabulary
-Number of german words, according to nltk: 52
-German word rate: 0.37681159420289856
+Number of german words, according to nltk: 64
+German word rate: 0.47058823529411764
 
 The 10 first german words:
-
-hintergrund
-jahrhundert
-russian
-has
-expeditions
-norden
+kapitän
+ivan
+papanin
 und
-journeys
-wichtig
+expeditions
+arcticcitation
+needed
+forschung
+russian
+
 
 
 Build german vocabulary and print size
-German vocabulary size: 39
+German vocabulary size: 36
 
 The 10 most used german words:
 Build german histogram from vocabulary and preview the n most used words
-: 5
+: 9
+und: 6
 arctic: 4
-und: 4
-journeys: 3
-norden: 2
-since: 1
-navy: 1
-fyodorovich: 1
-ocean: 1
-fyodorovamursky: 1
+antarctic: 4
+soviet: 4
+artists: 2
+stands: 2
+regierung: 2
+ft: 2
+metres: 2

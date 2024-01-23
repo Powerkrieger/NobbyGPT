@@ -188,6 +188,7 @@ if __name__ == '__main__':
     # prepare model and tokenizer
     base_model_name = "Llama-2-7b-hf"
     base_model_id = f"meta-llama/{base_model_name}"
+
     model = load_model(base_model_id)
     tokenizer = load_tokenizer(base_model_id)
     tokenized_train_dataset, tokenized_val_dataset = tokenize_datasets(tokenizer, train_dataset, eval_dataset)

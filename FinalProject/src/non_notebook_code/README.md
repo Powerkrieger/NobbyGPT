@@ -1,6 +1,6 @@
 ### 1.
 ```
-pip install venv
+pip install --upgrade virtualenv
 ```
 ### 2.
 ```

@@ -1,4 +1,4 @@
-import urllib
+import urllib.request
 
 if __name__ == "__main__":
     urllib.request.urlretrieve("https://raw.githubusercontent.com/elastic/hunspell/master/dicts/de_DE/de_DE.dic",

@@ -13,10 +13,9 @@ from datetime import datetime
 
 base_model_name = "Llama-2-7b-hf"
 base_model_id = f"meta-llama/{base_model_name}"
-project_name = "whole-text-denglish-finetune"
-train_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL4_J.json'
+train_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL3_J.json'
 eval_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL3_J.json'
-
+project_name = "denglish-weeve_lvl3"
 
 
 def formatting_func(example):
@@ -137,7 +136,8 @@ def setup_accelerator():
     return accelerator
 
 
-def setup_finetuning(model, tokenizer, project, base_model_name):
+def setup_finetuning(model, tokenizer, project, base_model_name,
+                     tokenized_train_dataset, tokenized_eval_dataset):
     if torch.cuda.device_count() > 1:  # If more than 1 GPU
         print("more than 1 ...")
         model.is_parallelizable = True
@@ -151,7 +151,7 @@ def setup_finetuning(model, tokenizer, project, base_model_name):
     trainer = transformers.Trainer(
         model=model,
         train_dataset=tokenized_train_dataset,
-        eval_dataset=tokenized_val_dataset,
+        eval_dataset=tokenized_eval_dataset,
         args=transformers.TrainingArguments(
             output_dir=output_dir,
             warmup_steps=1,
@@ -193,11 +193,9 @@ if __name__ == '__main__':
                                 split='train')
 
     # prepare model and tokenizer
-
-
     model = load_model(base_model_id)
     tokenizer = load_tokenizer(base_model_id)
-    tokenized_train_dataset, tokenized_val_dataset = tokenize_datasets(tokenizer, train_dataset, eval_dataset)
+    tokenized_train_dataset, tokenized_eval_dataset = tokenize_datasets(tokenizer, train_dataset, eval_dataset)
     print(tokenized_train_dataset[1]['input_ids'])
 
     # evaluate unfitted model
@@ -207,5 +205,6 @@ if __name__ == '__main__':
     model = lora_setup(model)
 
     # finetune
-    trainer = setup_finetuning(model, tokenizer, project_name, base_model_name)
+    trainer = setup_finetuning(model, tokenizer, project_name, base_model_name,
+                               tokenized_train_dataset, tokenized_eval_dataset)
     trainer.train()

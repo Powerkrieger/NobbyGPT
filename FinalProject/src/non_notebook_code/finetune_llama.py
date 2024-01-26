@@ -142,7 +142,6 @@ def setup_finetuning(model, tokenizer, project, base_model_name,
         model=model,
         train_dataset=tokenized_train_dataset,
         eval_dataset=tokenized_eval_dataset,
-        save_embedding_layers=True,
         args=transformers.TrainingArguments(
             output_dir=output_dir,
             warmup_steps=1,

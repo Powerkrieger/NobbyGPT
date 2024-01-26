@@ -44,5 +44,5 @@ if __name__ == "__main__":
     run_name = base_model_name + "-" + project_name
     ft_model = PeftModel.from_pretrained(base_model, f"{run_name}/checkpoint-500")
 
-    # for i in range(100):
-    evaluate_model(ft_model, tokenizer)
+    for i in range(100):
+        evaluate_model(ft_model, tokenizer)

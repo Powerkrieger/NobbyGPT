@@ -1,11 +1,11 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
-from FinalProject.src.non_notebook_code import finetune_llama
+import nobbygpt_config
 
-base_model_name = finetune_llama.base_model_name
-base_model_id = finetune_llama.base_model_id
-# project_name = finetune_llama.project_name
+base_model_name = nobbygpt_config.base_model_name
+base_model_id = nobbygpt_config.base_model_id
+# project_name = nobbygpt_config.project_name
 project_name = "denglish-weeve_lvl4"
 
 

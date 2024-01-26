@@ -10,13 +10,14 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import transformers
 from datetime import datetime
 
-from FinalProject.src.non_notebook_code import inference_llama
+import nobbygpt_config
+import inference_llama
 
-base_model_name = "Llama-2-7b-hf"
-base_model_id = f"meta-llama/{base_model_name}"
-train_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL4_J.json'
-eval_data_file = '../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL4_J.json'
-project_name = "denglish-weeve_lvl4"
+base_model_name = nobbygpt_config.base_model_name
+base_model_id = nobbygpt_config.base_model_id
+train_data_file = nobbygpt_config.train_data_file
+eval_data_file = nobbygpt_config.eval_data_file
+project_name = nobbygpt_config.project_name
 
 
 def formatting_func(example):

@@ -10,6 +10,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import transformers
 from datetime import datetime
 
+from FinalProject.src.non_notebook_code import inference_llama
 
 base_model_name = "Llama-2-7b-hf"
 base_model_id = f"meta-llama/{base_model_name}"
@@ -114,18 +115,6 @@ def lora_setup(model_for_lora):
     return model_for_lora
 
 
-def evaluate_model(model, tokenizer):
-    # prepare model input
-    eval_prompt = "Write a story about a sailor. "  # End of sentence, we just want to see what is the output
-    model_input = tokenizer(eval_prompt, return_tensors="pt").to("cuda")
-
-    # test evaluate model
-    model.eval()
-    with torch.no_grad():
-        print(tokenizer.decode(model.generate(**model_input, max_new_tokens=256, pad_token_id=2)[0],
-                               skip_special_tokens=True))
-
-
 def setup_accelerator():
     fsdp_plugin = FullyShardedDataParallelPlugin(
         state_dict_config=FullStateDictConfig(offload_to_cpu=True, rank0_only=False),
@@ -152,6 +141,7 @@ def setup_finetuning(model, tokenizer, project, base_model_name,
         model=model,
         train_dataset=tokenized_train_dataset,
         eval_dataset=tokenized_eval_dataset,
+        save_embedding_layers=True,
         args=transformers.TrainingArguments(
             output_dir=output_dir,
             warmup_steps=1,
@@ -199,7 +189,7 @@ if __name__ == '__main__':
     print(tokenized_train_dataset[1]['input_ids'])
 
     # evaluate unfitted model
-    evaluate_model(model, tokenizer)
+    inference_llama.evaluate_model(model, tokenizer)
 
     # set up lora
     model = lora_setup(model)

@@ -1,10 +1,26 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel
-from finetune_llama import evaluate_model
-from finetune_llama import base_model_name
-from finetune_llama import base_model_id
-from finetune_llama import project_name
+from FinalProject.src.non_notebook_code import finetune_llama
+
+base_model_name = finetune_llama.base_model_name
+base_model_id = finetune_llama.base_model_id
+# project_name = finetune_llama.project_name
+project_name = "denglish-weeve_lvl4"
+
+
+def evaluate_model(model, tokenizer, max_tokens=256):
+    # prepare model input
+    eval_prompt = "Write a story about a sailor. "  # End of sentence, we just want to see what is the output
+    model_input = tokenizer(eval_prompt, return_tensors="pt").to("cuda")
+
+    # test evaluate model
+    # llama-2 was trained wit a context length of 4096, so it should not be out of context to generate so many tokens
+    model.eval()
+    with torch.no_grad():
+        print(tokenizer.decode(model.generate(**model_input, max_new_tokens=max_tokens, pad_token_id=2)[0],
+                               skip_special_tokens=True))
+
 
 if __name__ == "__main__":
     bnb_config = BitsAndBytesConfig(
@@ -25,4 +41,5 @@ if __name__ == "__main__":
     run_name = base_model_name + "-" + project_name
     ft_model = PeftModel.from_pretrained(base_model, f"{run_name}/checkpoint-500")
 
-    evaluate_model(ft_model, tokenizer)
+    #for i in range(100):
+    evaluate_model(ft_model, tokenizer, max_tokens=4096)

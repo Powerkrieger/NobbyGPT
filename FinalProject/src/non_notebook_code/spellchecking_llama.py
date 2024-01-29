@@ -1,27 +1,34 @@
 import re
+import urllib
+
 import matplotlib.pyplot as plt
 import language_tool_python
 from spellchecker import SpellChecker
 import hunspell
 import nltk
 
-
 if __name__ == "__main__":
+    urllib.request.urlretrieve("https://raw.githubusercontent.com/elastic/hunspell/master/dicts/de_DE/de_DE.dic",
+                               "../Data/dict/de_DE.dic")
+    urllib.request.urlretrieve("https://raw.githubusercontent.com/elastic/hunspell/master/dicts/de_DE/de_DE.aff",
+                               "../Data/dict/de_DE.aff")
     filename = input("Enter the name of the file: ")
     # Configuration variables -> Change things here!
-    tool = language_tool_python.LanguageTool('de-DE', config={ 'cacheSize': 1000, 'pipelineCaching': True, 'maxSpellingSuggestions': 1 }) # LanguageTool Setup
-    spell = SpellChecker(language='de') # PySpellChecker Setup
+    tool = language_tool_python.LanguageTool('de-DE', config={'cacheSize': 1000, 'pipelineCaching': True,
+                                                              'maxSpellingSuggestions': 1})  # LanguageTool Setup
+    spell = SpellChecker(language='de')  # PySpellChecker Setup
 
     # For HunSpell you will need files from here: https://github.com/elastic/hunspell/tree/master/dicts/de_DE
-    d = hunspell.HunSpell("de_DE.dic", "de_DE.aff") # Upload these two files from the provided GitHub URL into the instance!
+    d = hunspell.HunSpell("../Data/dict/de_DE.dic",
+                          "../Data/dict/de_DE.aff")  # Upload these two files from the provided GitHub URL into the instance!
 
     # Initialization of nltk
     nltk.download('words')
     eng_words = nltk.corpus.words.words()
 
     # Misc parameters
-    text_preview_len = 256 # Length of the .txt preview
-    vocab_hist_preview = 10 # Length of the vocabulary preview and german word preview
+    text_preview_len = 256  # Length of the .txt preview
+    vocab_hist_preview = 10  # Length of the vocabulary preview and german word preview
     # filename = 'Test.txt' # Name of the file to check
 
     print("Reading the textfile and previewing the first n characters :\n")
@@ -58,7 +65,7 @@ if __name__ == "__main__":
     print("Error Rate: ", (len(errors) / len(words)))
 
     print("Build vocabulary and print size")
-    words_v = [word.lower() for word in words]
+    words_v = [word for word in words]  # [word.lower() for word in words] # TODO: Why lower()
     vocabulary_dict = dict.fromkeys(words_v)
     vocabulary = list(vocabulary_dict)
     print("Vocabulary size:", len(vocabulary))

@@ -1,14 +1,12 @@
 import json
 import re
-import urllib
 
-import matplotlib.pyplot as plt
+import chardet
+import hunspell
 import language_tool_python
+import nltk
 import pandas as pd
 from spellchecker import SpellChecker
-# import hunspell
-import nltk
-import chardet
 
 
 def read_sorted_dictionary(file_path, encoding):

@@ -109,8 +109,8 @@ def pyspellchecker_check(words):
 
 def hunspell_check(words):
     # For HunSpell you will need files from here: https://github.com/elastic/hunspell/tree/master/dicts/de_DE
-    d = hunspell.HunSpell("../Data/dict/de_DE.dic",
-                          "../Data/dict/de_DE.aff")
+    d = hunspell.HunSpell("../../Data/dict/de_DE.dic",
+                          "../../Data/dict/de_DE.aff")
 
     errors = []
     for word in words:
@@ -180,10 +180,10 @@ if __name__ == "__main__":
     # filename = input("Enter the name of the file: ")
     filenames = []
     filenames.append("../../Data/Generated_Samples/german_baseline/sample001.txt")  # TODO sample002.txt
-    filenames.append("../../Data/Generated_Samples/inference_lvl2/sample002.txt")
-    filenames.append("../../Data/Generated_Samples/inference_lvl3/sample002.txt")
-    filenames.append("../../Data/Generated_Samples/inference_lvl4/sample002.txt")
-    filenames.append("../../Data/Generated_Samples/textbook-german/sample002.txt")
+    filenames.append("../../Data/Generated_Samples/inference_lvl2/sample003.txt")
+    filenames.append("../../Data/Generated_Samples/inference_lvl3/sample003.txt")
+    filenames.append("../../Data/Generated_Samples/inference_lvl4/sample003.txt")
+    filenames.append("../../Data/Generated_Samples/textbook-german/sample003.txt")
     filenames.append("../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL2_J.json")
     filenames.append("../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL3_J.json")
     filenames.append("../../Data/Training_Data/WeeveIE_Wikipedia/WeeveLVL4_J.json")

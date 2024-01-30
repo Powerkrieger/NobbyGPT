@@ -13,6 +13,7 @@ base_model_id = nobbygpt_config.base_model_id
 def evaluate_model(model, tokenizer, max_tokens=256):
     # prepare model input
     eval_prompt = "Write a story about a sailor. "  # End of sentence, we just want to see what is the output
+    eval_prompt = 'Bitte generiere einen langen Aufsatz, basierend auf dem folgenden Anfang: "Hallo, mein Name ist".'
     model_input = tokenizer(eval_prompt, return_tensors="pt").to("cuda")
 
     # test evaluate model

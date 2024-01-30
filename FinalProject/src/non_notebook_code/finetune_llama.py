@@ -150,6 +150,8 @@ def setup_finetuning(model, tokenizer, project, base_model_name,
             gradient_checkpointing=True,
             gradient_checkpointing_kwargs={'use_reentrant': False},
             max_steps=500,
+            do_train=True,  # mby this will log training loss?
+            # logging_steps=50,  # and this to set interval
             learning_rate=2.5e-5,  # Want a small lr for finetuning
             bf16=True,
             optim="paged_adamw_8bit",

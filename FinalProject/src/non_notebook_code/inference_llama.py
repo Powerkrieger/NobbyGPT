@@ -44,6 +44,7 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(base_model_id, add_bos_token=True, trust_remote_code=True)
     run_name = base_model_name + "-" + project_name
     ft_model = PeftModel.from_pretrained(base_model, f"{run_name}/checkpoint-500")
+    tf_model = base_model
 
     for i in range(100):
         evaluate_model(ft_model, tokenizer)

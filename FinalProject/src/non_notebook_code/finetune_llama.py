@@ -150,19 +150,19 @@ def setup_finetuning(model, tokenizer, project, base_model_name,
             gradient_checkpointing=True,
             gradient_checkpointing_kwargs={'use_reentrant': False},
             max_steps=500,
-            do_train=True,  # mby this will log training loss?
-            # logging_steps=50,  # and this to set interval
-            learning_rate=2.5e-5,  # Want a small lr for finetuning
+            do_train=True,
+            logging_steps=50,
+            logging_dir="./logs",
+            learning_rate=2.5e-5,  # Want a small lr for fine-tuning
             bf16=True,
             optim="paged_adamw_8bit",
-            logging_dir="./logs",  # Directory for storing logs
             save_strategy="steps",  # Save the model checkpoint every logging step
             save_steps=50,  # Save checkpoints every 50 steps
+            do_eval=True,  # Perform evaluation at the end of training
             evaluation_strategy="steps",  # Evaluate the model every logging step
             eval_steps=50,  # Evaluate and save checkpoints every 50 steps
-            do_eval=True,  # Perform evaluation at the end of training
-            report_to="wandb",  # Comment this out if you don't want to use weights & baises
-            run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"  # Name of the W&B run (optional)
+            report_to="wandb",
+            run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"
         ),
         data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
